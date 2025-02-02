@@ -1,4 +1,4 @@
-/* RESET & BASEss */
+/* RESET & BASE */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -322,6 +322,11 @@ canvas {
   margin: 0;
 }
 
+/* RESULTS in Inputs Tab */
+#inputResults {
+  margin-top: 20px;
+}
+
 /* SCENARIOS TABLE */
 .table-container {
   overflow-x: auto;
@@ -344,11 +349,6 @@ canvas {
 }
 #scenarioTable tr:nth-child(even) {
   background-color: #f2f2f2;
-}
-
-/* RESULTS in Inputs Tab */
-#inputResults {
-  margin-top: 20px;
 }
 
 /* RESPONSIVE DESIGN */
