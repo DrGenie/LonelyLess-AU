@@ -16,7 +16,7 @@
   <div class="container">
     <header>
       <h1>LonelyLessAustralia Decision Aid Tool</h1>
-      <p>This tool helps you evaluate programme configurations for reducing loneliness among older adults in Australia. </p>
+      <p>This tool helps you evaluate programme configurations for reducing loneliness. It explains how costs and benefits are calculated so that even lay users can understand the trade‐offs.</p>
     </header>
 
     <nav class="tabs" role="tablist">
@@ -58,7 +58,7 @@
           <li><strong>Inputs</strong> – Configure your scenario parameters using visually appealing level cards.</li>
           <li><strong>WTP Results</strong> – View charts showing willingness-to-pay estimates.</li>
           <li><strong>Predicted Programme Uptake</strong> – See the predicted uptake percentage with dynamic recommendations.</li>
-          <li><strong>Costs &amp; Benefits</strong> – Analyse cost components and QALY-based benefits with interactive sliders, info boxes, and educational summaries.</li>
+          <li><strong>Costs &amp; Benefits</strong> – Analyse cost components and QALY-based benefits with interactive sliders and educational summaries.</li>
           <li><strong>Saved Scenarios</strong> – Compare and export your saved configurations.</li>
         </ul>
       </div>
@@ -71,9 +71,9 @@
         <ol>
           <li style="margin-left: 20px;">Review the <strong>Attributes</strong> tab to understand each programme feature. Hover over the info icons for details and reference levels (except for cost per session).</li>
           <li style="margin-left: 20px;">Configure your scenario in the <strong>Inputs</strong> tab using the level cards. All features (except method) are required; if no method is selected, in-person is assumed.</li>
-          <li style="margin-left: 20px;">Click “Calculate &amp; View Results” to immediately see your results in a popup.</li>
+          <li style="margin-left: 20px;">Click “Calculate &amp; View Results” to immediately see your results in a popup modal.</li>
           <li style="margin-left: 20px;">Examine the <strong>WTP Results</strong> tab for monetary values assigned to each attribute.</li>
-          <li style="margin-left: 20px;">Check the <strong>Predicted Programme Uptake</strong> tab for the uptake percentage and dynamic recommendations (which also appear in the popup when calculated).</li>
+          <li style="margin-left: 20px;">Check the <strong>Predicted Programme Uptake</strong> tab for the uptake percentage and dynamic recommendations (which also appear in the popup).</li>
           <li style="margin-left: 20px;">Review the <strong>Costs &amp; Benefits</strong> tab for a detailed breakdown and chart.</li>
           <li style="margin-left: 20px;">Save and compare scenarios in the <strong>Saved Scenarios</strong> tab or export the results to PDF.</li>
         </ol>
@@ -108,8 +108,7 @@
               <path d="M12 4a8 8 0 0 1 0 16 8 8 0 0 1 0-16z" fill="#e67e22"/>
             </svg>
             <div class="tooltip" role="tooltip">
-              <strong>Reference: At Home</strong><br/>
-              Offered locally (up to 12 km) versus in a wider community (50+ km).
+              <strong>Reference: At Home</strong><br/>Offered locally (up to 12 km) versus in a wider community (50+ km).
             </div>
           </div>
           <div class="attribute-content">
@@ -125,8 +124,7 @@
               <path d="M12 6v6l4 2" stroke="#27ae60" stroke-width="2" fill="none"/>
             </svg>
             <div class="tooltip" role="tooltip">
-              <strong>Reference: Daily</strong><br/>
-              Weekly sessions encourage more regular engagement than monthly.
+              <strong>Reference: Daily</strong><br/>Weekly sessions encourage more regular engagement than monthly.
             </div>
           </div>
           <div class="attribute-content">
@@ -142,8 +140,7 @@
               <path d="M8 12h8M12 8v8" stroke="#8e44ad" stroke-width="2" fill="none"/>
             </svg>
             <div class="tooltip" role="tooltip">
-              <strong>Reference: In-person</strong><br/>
-              Virtual sessions are online; hybrid sessions blend both.
+              <strong>Reference: In-person</strong><br/>Virtual sessions are online; hybrid sessions blend both.
             </div>
           </div>
           <div class="attribute-content">
@@ -159,8 +156,7 @@
               <path d="M12 6v6l4 2" stroke="#3498db" stroke-width="2" fill="none"/>
             </svg>
             <div class="tooltip" role="tooltip">
-              <strong>Reference: 30-minute</strong><br/>
-              Longer sessions (2 or 4 hours) affect depth and scheduling.
+              <strong>Reference: 30-minute</strong><br/>Longer sessions (2 or 4 hours) affect depth and scheduling.
             </div>
           </div>
           <div class="attribute-content">
@@ -176,8 +172,7 @@
               <path d="M8 12l2-2 4 4 6-6" stroke="#e74c3c" stroke-width="2" fill="none"/>
             </svg>
             <div class="tooltip" role="tooltip">
-              <strong>Reference: Peer Support</strong><br/>
-              Options include community engagement, counselling, or VR-based sessions.
+              <strong>Reference: Peer Support</strong><br/>Options include community engagement, counselling, or VR-based sessions.
             </div>
           </div>
           <div class="attribute-content">
@@ -324,7 +319,7 @@
             <button type="button" onclick="openSingleScenario()">Calculate &amp; View Results</button>
           </div>
         </form>
-        <!-- Results Modal for Inputs Tab -->
+        <!-- Modal Popup for Results -->
         <div id="resultModal" class="modal">
           <div class="modal-content">
             <span class="close-button" onclick="closeModal()">&times;</span>
@@ -400,6 +395,7 @@
           <button class="buttons-row" onclick="toggleBenefitsAnalysis()">Benefits Analysis</button>
         </div>
         <div id="detailedCostBreakdown" class="cost-cards" style="display: none;">
+          <!-- (Cost cards as before) -->
           <div class="cost-card">
             <h4><i class="fa-solid fa-newspaper"></i> Advertisements in Local Press</h4>
             <p><strong>Value:</strong> A$2978.80</p>
@@ -528,14 +524,6 @@
     <footer>
       <p>&copy; 2025 LonelyLessAustralia. All Rights Reserved.<br />Mesfin Genie, Newcastle Business School, The University of Newcastle, Australia</p>
     </footer>
-  </div>
-
-  <!-- Result Modal -->
-  <div id="resultModal" class="modal">
-    <div class="modal-content">
-      <span class="close-button" onclick="closeModal()">&times;</span>
-      <div id="modalResults"></div>
-    </div>
   </div>
 
   <script src="script.js"></script>
