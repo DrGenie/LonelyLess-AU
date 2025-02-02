@@ -91,42 +91,36 @@ function buildScenarioFromInputs() {
   const state = document.getElementById("state_select").value;
   const adjustCosts = document.getElementById("adjustCosts").value;
   const cost_val = parseInt(document.getElementById("costSlider").value, 10);
-  const localCheck = document.getElementById("localCheck").checked;
-  const widerCheck = document.getElementById("widerCheck").checked;
-  const weeklyCheck = document.getElementById("weeklyCheck").checked;
-  const monthlyCheck = document.getElementById("monthlyCheck").checked;
-  const virtualCheck = document.getElementById("virtualCheck").checked;
-  const hybridCheck = document.getElementById("hybridCheck").checked;
-  const twoHCheck = document.getElementById("twoHCheck").checked;
-  const fourHCheck = document.getElementById("fourHCheck").checked;
-  const commCheck = document.getElementById("commCheck").checked;
-  const psychCheck = document.getElementById("psychCheck").checked;
-  const vrCheck = document.getElementById("vrCheck").checked;
+  // For the radio buttons, use document.querySelector to fetch the selected value:
+  const support = document.querySelector('input[name="support"]:checked');
+  const method = document.querySelector('input[name="method"]:checked');
+  const frequency = document.querySelector('input[name="frequency"]:checked');
+  const duration = document.querySelector('input[name="duration"]:checked');
+  const accessibility = document.querySelector('input[name="accessibility"]:checked');
 
-  if ([commCheck, psychCheck, vrCheck].filter(Boolean).length > 1) {
-    alert("Select only one Support Programme: Community, Counselling, or VR.");
+  // If any required radio group is not selected, alert the user.
+  if (!support || !method || !frequency || !duration || !accessibility) {
+    alert("Please select a level for all input cards.");
     return null;
   }
-  if ([virtualCheck, hybridCheck].filter(Boolean).length > 1) {
-    alert("Select only one Method: Virtual or Hybrid.");
-    return null;
-  }
-  if (localCheck && widerCheck) {
-    alert("Cannot select both Local and Wider Community.");
-    return null;
-  }
-  if (weeklyCheck && monthlyCheck) {
-    alert("Cannot select both Weekly and Monthly.");
-    return null;
-  }
-  if (twoHCheck && fourHCheck) {
-    alert("Cannot select both 2-Hour and 4-Hour sessions.");
-    return null;
-  }
-  if (adjustCosts === 'yes' && !state) {
-    alert("Select a state when adjusting cost-of-living.");
-    return null;
-  }
+
+  // For boolean flags, store true/false
+  const commCheck = support.value === "community";
+  const psychCheck = support.value === "counselling";
+  const vrCheck = support.value === "vr";
+
+  const virtualCheck = method.value === "virtual";
+  const hybridCheck = method.value === "hybrid";
+
+  const weeklyCheck = frequency.value === "weekly";
+  const monthlyCheck = frequency.value === "monthly";
+
+  const twoHCheck = duration.value === "2hr";
+  const fourHCheck = duration.value === "4hr";
+
+  const localCheck = accessibility.value === "local";
+  const widerCheck = accessibility.value === "wider";
+
   // Compute predicted uptake and net benefit for later use:
   const uptake = computeProbability({ state, adjustCosts, cost_val, localCheck, widerCheck, weeklyCheck, monthlyCheck, virtualCheck, hybridCheck, twoHCheck, fourHCheck, commCheck, psychCheck, vrCheck }, mainCoefficients) * 100;
   const baseParticipants = 250;
