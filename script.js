@@ -1,6 +1,6 @@
 /****************************************************************************
  * SCRIPT.JS
- * Enhanced tabs with working icons and tooltips, improved Inputs layout
+ * Enhanced tabs with working icons and tooltips, improved Inputss layout
  * using level cards with info icons that show tooltips on hover, interactive
  * Cost-Benefits section with toggle buttons and a combined bar chart,
  * detailed educational summaries, and export to PDF functionality.
