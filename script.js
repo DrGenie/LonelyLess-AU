@@ -2,7 +2,7 @@
  * SCRIPT.JS
  * Enhanced tabs with event listeners, improved Inputs layout,
  * interactive Cost-Benefits summary and chart, dynamic doughnut chart for
- * predicted uptake with multi-feature recommendationss, and export to PDF.
+ * predicted uptake with multi-feature recommendationnss, and export to PDF.
  ****************************************************************************/
 
 document.addEventListener("DOMContentLoaded", function() {
