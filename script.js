@@ -1,8 +1,8 @@
 /****************************************************************************
  * SCRIPT.JS
  * Enhanced tabs with event listeners, improved Inputs layout,
- * interactive Cost-Benefit summary and chart, dynamic doughnut chart for
- * predicted uptake with multi-feature recommendationnss, and expoort to PDF.
+ * interactive Cost-Benefits summary and chart, dynamic doughnut chart for
+ * predicted uptake with refined recommendations, and export to PDF.
  ****************************************************************************/
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -31,6 +31,8 @@ function openTab(tabId, btn) {
 
   if (tabId === 'wtpTab') renderWTPChart();
   if (tabId === 'costsTab') renderCostsBenefits();
+  // For the uptake tab, automatically show results if available
+  if (tabId === 'probTab') renderProbChart();
 }
 
 /** Update Range Slider Display */
@@ -114,6 +116,7 @@ function buildScenarioFromInputs() {
     return null;
   }
   
+  // Since support is mutually exclusive, only one will be selected.
   const commCheck = support.value === "community";
   const psychCheck = support.value === "counselling";
   const vrCheck = support.value === "vr";
@@ -351,19 +354,18 @@ function openComparison() {
 /***************************************************************************
  * Render Predicted Programme Uptake Chart (Doughnut) with Dynamic Recommendations
  ***************************************************************************/
-let uptakeChart = null;  // Single declaration only.
+let uptakeChart = null; // single declaration
 function renderProbChart() {
   const scenario = buildScenarioFromInputs();
   if (!scenario) return;
   const pVal = computeProbability(scenario, mainCoefficients) * 100;
   drawUptakeChart(pVal);
   const recommendation = getRecommendation(scenario, pVal);
-  // Update the results in the Inputs tab as well.
-  const resultsDiv = document.getElementById("inputResults");
-  resultsDiv.innerHTML = `<h4>Calculation Results</h4>
+  // Update the modal with results and show it.
+  document.getElementById("modalResults").innerHTML = `<h4>Calculation Results</h4>
     <p><strong>Predicted Uptake:</strong> ${pVal.toFixed(1)}%</p>
     <p>${recommendation}</p>`;
-  resultsDiv.style.display = "block";
+  openModal();
 }
 
 /** Draw Uptake Chart (Doughnut) */
@@ -373,7 +375,7 @@ function drawUptakeChart(uptakeVal) {
   uptakeChart = new Chart(ctx, {
     type: "doughnut",
     data: {
-      labels: ["Uptake", "Remaining"],
+      labels: ["Uptake", "Non‑uptake"],
       datasets: [{
         data: [uptakeVal, 100 - uptakeVal],
         backgroundColor: ["#28a745", "#dc3545"]
@@ -402,41 +404,270 @@ function drawUptakeChart(uptakeVal) {
 
 /***************************************************************************
  * Dynamic Recommendation for Predicted Programme Uptake
+ * (Only one support type is possible; do not integrate mutually exclusive messages)
  ***************************************************************************/
 function getRecommendation(scenario, uptake) {
   let rec = "Recommendation: ";
   
+  // Method
   if (!scenario.virtualCheck && !scenario.hybridCheck) {
     rec += "Delivery defaults to in-person. ";
-  } else {
-    if (scenario.virtualCheck && uptake < 50) {
-      rec += "Fully virtual delivery may lower uptake; consider a hybrid or in-person approach. ";
-    }
-    if (scenario.hybridCheck && uptake < 50) {
-      rec += "Hybrid delivery may benefit from more in-person elements. ";
-    }
+  } else if (scenario.virtualCheck && uptake < 50) {
+    rec += "Fully virtual delivery may lower uptake; consider switching to a hybrid or in-person approach. ";
+  } else if (scenario.hybridCheck && uptake < 50) {
+    rec += "Hybrid delivery may benefit from increasing in-person elements. ";
   }
   
+  // Support type (only one can be selected)
   if (scenario.commCheck && uptake < 40) {
-    rec += "Enhance promotion of community engagement. ";
-  }
-  if (scenario.psychCheck && uptake < 40) {
-    rec += "Integrate community support with counselling. ";
-  }
-  if (scenario.vrCheck && uptake < 40) {
-    rec += "Consider supplementing VR sessions with traditional support. ";
+    rec += "Promote community engagement more strongly. ";
+  } else if (scenario.psychCheck && uptake < 40) {
+    rec += "Counselling might be less appealing on its own; consider additional engagement strategies. ";
+  } else if (scenario.vrCheck && uptake < 40) {
+    rec += "VR-based sessions may be less effective; consider alternative support methods. ";
   }
   
+  // Frequency and Duration
   if (scenario.monthlyCheck && uptake < 50) {
-    rec += "Increase session frequency from monthly to weekly. ";
+    rec += "Switch from monthly to weekly sessions to improve uptake. ";
+  } else if (scenario.weeklyCheck && uptake < 50) {
+    rec += "Weekly sessions are preferable. ";
   }
   if (scenario.twoHCheck && uptake < 50) {
     rec += "Shorter interactions might attract more participants. ";
-  }
-  if (scenario.fourHCheck && uptake >= 70) {
+  } else if (scenario.fourHCheck && uptake >= 70) {
     rec += "Longer interactions are effective. ";
   }
   
+  // Accessibility
+  if (scenario.widerCheck && uptake < 50) {
+    rec += "Offering the programme locally could boost uptake. ";
+  }
+  
+  if (uptake >= 70) {
+    rec = "Uptake is high. The current configuration is effective.";
+  }
+  
+  return rec;
+}
+
+/***************************************************************************
+ * Render Costs & Benefits Analysis (Combined Bar Chart)
+ ***************************************************************************/
+let combinedChartInstance = null;
+const QALY_SCENARIO_VALUES = { low: 0.02, moderate: 0.05, high: 0.1 };
+const VALUE_PER_QALY = 50000;
+const FIXED_COSTS = { advertisement: 2978.80 };
+const VARIABLE_COSTS = { 
+  printing: 0.12 * 10000, 
+  postage: 0.15 * 10000, 
+  admin: 49.99 * 10, 
+  trainer: 223.86 * 100, 
+  oncosts: 44.77 * 100, 
+  facilitator: 100.00 * 100, 
+  materials: 50.00 * 100, 
+  venue: 15.00 * 100, 
+  sessionTime: 20.00 * 250, 
+  travel: 10.00 * 250 
+};
+const FIXED_TOTAL = FIXED_COSTS.advertisement + 26863.00;
+const VARIABLE_TOTAL = VARIABLE_COSTS.printing + VARIABLE_COSTS.postage + VARIABLE_COSTS.admin + VARIABLE_COSTS.trainer +
+                         VARIABLE_COSTS.oncosts + VARIABLE_COSTS.facilitator + VARIABLE_COSTS.materials +
+                         VARIABLE_COSTS.venue + VARIABLE_COSTS.sessionTime + VARIABLE_COSTS.travel;
+
+function renderCostsBenefits() {
+  const scenario = buildScenarioFromInputs();
+  if (!scenario) return;
+  const pVal = computeProbability(scenario, mainCoefficients);
+  const uptakePercentage = pVal * 100;
+  const baseParticipants = 250;
+  const numberOfParticipants = baseParticipants * pVal;
+  const qalyScenario = document.getElementById("qalySelect").value;
+  const qalyPerParticipant = QALY_SCENARIO_VALUES[qalyScenario];
+  const totalQALY = numberOfParticipants * qalyPerParticipant;
+  const monetizedBenefits = totalQALY * VALUE_PER_QALY;
+  const totalInterventionCost = FIXED_TOTAL + (VARIABLE_TOTAL * pVal);
+  const costPerPerson = totalInterventionCost / numberOfParticipants;
+  const netBenefit = monetizedBenefits - totalInterventionCost;
+  
+  scenario.predictedUptake = uptakePercentage.toFixed(2);
+  scenario.netBenefit = netBenefit.toFixed(2);
+  
+  const costsTab = document.getElementById("costsBenefitsResults");
+  costsTab.innerHTML = "";
+  
+  const summaryDiv = document.createElement("div");
+  summaryDiv.className = "calculation-info";
+  summaryDiv.innerHTML = `
+    <h4>Cost &amp; Benefits Analysis</h4>
+    <p><strong>Uptake:</strong> ${uptakePercentage.toFixed(2)}%</p>
+    <p><strong>Participants:</strong> ${numberOfParticipants.toFixed(0)}</p>
+    <p><strong>Total Intervention Cost:</strong> A$${totalInterventionCost.toFixed(2)}</p>
+    <p><strong>Cost per Participant:</strong> A$${costPerPerson.toFixed(2)}</p>
+    <p><strong>Total QALYs:</strong> ${totalQALY.toFixed(2)}</p>
+    <p><strong>Monetised Benefits:</strong> A$${monetizedBenefits.toLocaleString()}</p>
+    <p><strong>Net Benefit:</strong> A$${netBenefit.toLocaleString()}</p>
+    <p>This analysis combines fixed costs (advertisements and training) with variable costs (printing, postage, administrative personnel, trainer cost, on‑costs, facilitator salaries, material costs, venue hire, session time, and travel). Benefits are calculated based on QALY gains multiplied by A$50,000.</p>
+  `;
+  costsTab.appendChild(summaryDiv);
+  
+  const combinedChartContainer = document.createElement("div");
+  combinedChartContainer.id = "combinedChartContainer";
+  combinedChartContainer.innerHTML = `<canvas id="combinedChart"></canvas>`;
+  costsTab.appendChild(combinedChartContainer);
+  
+  const ctxCombined = document.getElementById("combinedChart").getContext("2d");
+  if (combinedChartInstance) combinedChartInstance.destroy();
+  combinedChartInstance = new Chart(ctxCombined, {
+    type: 'bar',
+    data: {
+      labels: ["Total Cost", "Monetised Benefits", "Net Benefit"],
+      datasets: [{
+        label: "A$",
+        data: [totalInterventionCost, monetizedBenefits, netBenefit],
+        backgroundColor: [
+          'rgba(220,53,69,0.6)',
+          'rgba(40,167,69,0.6)',
+          'rgba(255,193,7,0.6)'
+        ],
+        borderColor: [
+          'rgba(220,53,69,1)',
+          'rgba(40,167,69,1)',
+          'rgba(255,193,7,1)'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        title: { display: true, text: "Combined Cost-Benefit Analysis", font: { size: 16 } }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          suggestedMax: Math.max(totalInterventionCost, monetizedBenefits, Math.abs(netBenefit)) * 1.2
+        }
+      }
+    }
+  });
+}
+
+/***************************************************************************
+ * Modal Functions for Results
+ ***************************************************************************/
+function openModal() {
+  document.getElementById("resultModal").style.display = "block";
+}
+function closeModal() {
+  document.getElementById("resultModal").style.display = "none";
+}
+
+/***************************************************************************
+ * Integration: Calculate & View Results from Inputs Tab
+ ***************************************************************************/
+function openSingleScenario() {
+  // Calculate results, update modal, and show it.
+  const scenario = buildScenarioFromInputs();
+  if (!scenario) return;
+  renderCostsBenefits();
+  const uptakeVal = computeProbability(scenario, mainCoefficients) * 100;
+  const recommendation = getRecommendation(scenario, uptakeVal);
+  document.getElementById("modalResults").innerHTML = `<h4>Calculation Results</h4>
+    <p><strong>Predicted Uptake:</strong> ${uptakeVal.toFixed(1)}%</p>
+    <p>${recommendation}</p>`;
+  openModal();
+  // Also update the Predicted Uptake chart in its tab.
+  renderProbChart();
+}
+
+/***************************************************************************
+ * Render Predicted Programme Uptake Chart (Doughnut) with Dynamic Recommendations
+ ***************************************************************************/
+let uptakeChart = null; // Single declaration only.
+function renderProbChart() {
+  const scenario = buildScenarioFromInputs();
+  if (!scenario) return;
+  const pVal = computeProbability(scenario, mainCoefficients) * 100;
+  drawUptakeChart(pVal);
+  const recommendation = getRecommendation(scenario, pVal);
+  // Also update modal if already open
+  document.getElementById("modalResults").innerHTML = `<h4>Calculation Results</h4>
+    <p><strong>Predicted Uptake:</strong> ${pVal.toFixed(1)}%</p>
+    <p>${recommendation}</p>`;
+}
+
+/** Draw Uptake Chart (Doughnut) */
+function drawUptakeChart(uptakeVal) {
+  const ctx = document.getElementById("uptakeChart").getContext("2d");
+  if (uptakeChart) uptakeChart.destroy();
+  uptakeChart = new Chart(ctx, {
+    type: "doughnut",
+    data: {
+      labels: ["Uptake", "Non‑uptake"],
+      datasets: [{
+        data: [uptakeVal, 100 - uptakeVal],
+        backgroundColor: ["#28a745", "#dc3545"]
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: true,
+          text: `Predicted Programme Uptake: ${uptakeVal.toFixed(1)}%`,
+          font: { size: 16 }
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              return `${context.label}: ${context.parsed.toFixed(1)}%`;
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+/***************************************************************************
+ * Dynamic Recommendation for Predicted Programme Uptake
+ * (Support types are mutually exclusive; recommendations reflect the chosen level.)
+ ***************************************************************************/
+function getRecommendation(scenario, uptake) {
+  let rec = "Recommendation: ";
+  
+  // Method
+  if (!scenario.virtualCheck && !scenario.hybridCheck) {
+    rec += "Delivery defaults to in-person. ";
+  } else if (scenario.virtualCheck && uptake < 50) {
+    rec += "Fully virtual delivery may lower uptake; consider switching to a hybrid or in-person approach. ";
+  } else if (scenario.hybridCheck && uptake < 50) {
+    rec += "Hybrid delivery may benefit from increasing in-person elements. ";
+  }
+  
+  // Support type
+  if (scenario.commCheck && uptake < 40) {
+    rec += "Promote community engagement more strongly. ";
+  } else if (scenario.psychCheck && uptake < 40) {
+    rec += "Counselling alone might be less appealing; consider additional engagement strategies. ";
+  } else if (scenario.vrCheck && uptake < 40) {
+    rec += "VR-based sessions may be less effective; consider alternative support methods. ";
+  }
+  
+  // Frequency and Duration
+  if (scenario.monthlyCheck && uptake < 50) {
+    rec += "Switch from monthly to weekly sessions to improve uptake. ";
+  }
+  if (scenario.twoHCheck && uptake < 50) {
+    rec += "Shorter interactions might attract more participants. ";
+  } else if (scenario.fourHCheck && uptake >= 70) {
+    rec += "Longer interactions are effective. ";
+  }
+  
+  // Accessibility
   if (scenario.widerCheck && uptake < 50) {
     rec += "Offering the programme locally could boost uptake. ";
   }
