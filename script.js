@@ -3,7 +3,7 @@
  * Enhanced tabs with event listeners, responsive collapsible sidebar,
  * onboarding guided tour, dark mode toggle, downloadable reports (PDF & CSV),
  * dynamic doughnut chart for predicted uptake with refined recommendations,
- * and immediate results modal.
+ * and results modal.
  ****************************************************************************/
 
 /* On DOM load */
