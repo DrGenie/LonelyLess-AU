@@ -2,7 +2,7 @@
  * SCRIPT.JS
  * Enhanced tabs with event listeners, dark mode toggle, onboarding guided tour,
  * downloadable reports (PDF & CSV), dynamic doughnut chart for predicted uptake
- * with refined recommendations, and immediate results modal.
+ * with recommendations, and immediate results modal.
  ****************************************************************************/
 
 /* On DOM load */
