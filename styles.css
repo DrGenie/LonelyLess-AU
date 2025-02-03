@@ -1,4 +1,4 @@
-/* RESET &a BASE */
+/* RESET & BASE */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -25,27 +25,33 @@ body.dark-mode {
   --secondary-color: #373b41;
 }
 
-/* Container */
+/* Standard full‑page layout */
 .main-content {
-  max-width: 900px;
-  margin: 20px auto;
-  padding: 0 15px;
+  width: 100%;
+  padding: 15px;
 }
-.container {
+header.site-header {
   background-color: var(--container-bg);
-  border-radius: 10px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.1);
-  padding: 20px 30px;
+  padding: 15px;
+  border-bottom: 2px solid var(--secondary-color);
+  position: relative;
+}
+header.site-header h1 {
+  text-align: left;
+  color: var(--primary-color);
+  margin-bottom: 8px;
+}
+header.site-header p {
+  text-align: left;
+  margin-bottom: 8px;
+  color: var(--text-color);
 }
 
-/* Dark Mode Toggle */
-#themeToggle {
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  z-index: 200;
-}
+/* Dark Mode Toggle in Header */
 #toggleDarkMode {
+  position: absolute;
+  top: 15px;
+  right: 15px;
   background: var(--secondary-color);
   border: none;
   padding: 8px;
@@ -69,13 +75,13 @@ body.dark-mode {
 }
 .sidebar-nav button {
   width: 100%;
-  background: none;
+  background: var(--secondary-color);
   border: none;
   text-align: left;
   padding: 15px 20px;
   font-size: 18px;
   color: var(--text-color);
-  border-bottom: 1px solid var(--secondary-color);
+  border-bottom: 1px solid var(--primary-color);
   cursor: pointer;
 }
 #openSidebar {
@@ -114,7 +120,7 @@ body.dark-mode {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  margin-bottom: 25px;
+  margin-bottom: 15px;
 }
 .tablink {
   background: var(--secondary-color);
@@ -133,7 +139,8 @@ body.dark-mode {
   color: #fff;
 }
 .tablink:hover {
-  background: #bdc3c7;
+  background: var(--primary-color);
+  color: #fff;
 }
 
 /* Tab Content */
@@ -151,14 +158,14 @@ body.dark-mode {
 
 /* Input Cards & Form */
 .input-card {
-  background-color: #f7f9fc;
+  background-color: var(--secondary-color);
   border-radius: 8px;
   padding: 15px;
   margin-bottom: 20px;
 }
 .input-card h2 {
   margin-bottom: 10px;
-  color: var(--text-color);
+  color: var(--primary-color);
 }
 .input-cards {
   display: flex;
@@ -166,8 +173,8 @@ body.dark-mode {
   gap: 20px;
 }
 .input-level-card {
-  background-color: #fff;
-  border: 1px solid #bdc3c7;
+  background-color: var(--container-bg);
+  border: 1px solid var(--primary-color);
   border-radius: 8px;
   padding: 15px;
   flex: 1 1 300px;
@@ -234,7 +241,7 @@ body.dark-mode {
   margin: 20px;
 }
 .attribute-card {
-  background-color: #f7f9fc;
+  background-color: var(--secondary-color);
   border-radius: 8px;
   padding: 15px;
   display: flex;
@@ -288,7 +295,7 @@ body.dark-mode {
 /* Charts */
 canvas {
   margin-top: 10px;
-  background-color: #fff;
+  background-color: var(--container-bg);
   border: 1px solid #ccc;
   border-radius: 6px;
 }
@@ -301,7 +308,7 @@ canvas {
 .chart-box {
   flex: 1 1 45%;
   padding: 10px;
-  background: #fafafa;
+  background: var(--secondary-color);
   border: 1px solid #ccc;
   border-radius: 6px;
   position: relative;
@@ -314,7 +321,7 @@ canvas {
 
 /* Costs & Benefits */
 .calculation-info {
-  background-color: #f9f9f9;
+  background-color: var(--container-bg);
   border-left: 4px solid var(--primary-color);
   padding: 15px;
   border-radius: 6px;
@@ -328,7 +335,7 @@ canvas {
   margin-top: 15px;
 }
 .cost-card {
-  background-color: #f7f9fc;
+  background-color: var(--secondary-color);
   border: 1px solid #ccc;
   border-radius: 6px;
   padding: 15px;
@@ -352,11 +359,11 @@ canvas {
   margin-top: 20px;
 }
 
-/* Modal Styles (Onboarding & Result) */
+/* Modal Styles */
 .modal {
   display: none;
   position: fixed;
-  z-index: 200;
+  z-index: 300;
   left: 0;
   top: 0;
   width: 100%;
@@ -369,7 +376,7 @@ canvas {
   margin: 10% auto;
   padding: 20px;
   border: 1px solid var(--secondary-color);
-  width: 80%;
+  width: 90%;
   max-width: 500px;
   border-radius: 8px;
   position: relative;
@@ -424,7 +431,7 @@ canvas {
     display: none;
   }
   #mainContent {
-    margin-left: 0;
+    margin: 0;
   }
   .form-grid, .input-cards {
     grid-template-columns: 1fr;
