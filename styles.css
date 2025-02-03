@@ -24,10 +24,14 @@ body.dark-mode {
   --primary-color: #81a2be;
   --secondary-color: #373b41;
 }
-.container {
-  width: 95%;
-  max-width: 1200px;
+
+/* Container */
+.main-content {
+  max-width: 900px;
   margin: 20px auto;
+  padding: 0 15px;
+}
+.container {
   background-color: var(--container-bg);
   border-radius: 10px;
   box-shadow: 0 0 15px rgba(0,0,0,0.1);
@@ -69,7 +73,7 @@ body.dark-mode {
   border: none;
   text-align: left;
   padding: 15px 20px;
-  font-size: 16px;
+  font-size: 18px;
   color: var(--text-color);
   border-bottom: 1px solid var(--secondary-color);
   cursor: pointer;
@@ -89,7 +93,7 @@ body.dark-mode {
 #closeSidebar {
   background: none;
   border: none;
-  font-size: 24px;
+  font-size: 28px;
   color: var(--text-color);
   margin-left: 10px;
   cursor: pointer;
@@ -348,7 +352,7 @@ canvas {
   margin-top: 20px;
 }
 
-/* Modal Styles */
+/* Modal Styles (Onboarding & Result) */
 .modal {
   display: none;
   position: fixed;
