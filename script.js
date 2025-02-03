@@ -1,8 +1,8 @@
 /****************************************************************************
  * SCRIPT.JS
- * Enhanced tabs with event listenerss, responsive sidebar,
+ * Enhanced tabs with event listeners, responsive collapsible sidebar,
  * onboarding guided tour, dark mode toggle, downloadable reports (PDF & CSV),
- * dynamic doughnutt chart for predicted uptake with refined recommendations,
+ * dynamic doughnut chart for predicted uptake with refined recommendations,
  * and immediate results modal.
  ****************************************************************************/
 
@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function() {
   });
   // Set default tab
   openTab("introTab", document.querySelector(".tablink"));
-  // Sidebar hamburger
+  // Sidebar hamburger events
   document.getElementById("openSidebar").addEventListener("click", openSidebar);
   document.getElementById("closeSidebar").addEventListener("click", closeSidebar);
   // Dark mode toggle
