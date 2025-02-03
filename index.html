@@ -13,12 +13,52 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
-  <div class="container">
+  <!-- Dark mode toggle -->
+  <div id="themeToggle">
+    <button id="toggleDarkMode" aria-label="Toggle dark mode"><i class="fa-solid fa-moon"></i></button>
+  </div>
+
+  <!-- Collapsible Sidebar for Mobile Navigation -->
+  <div id="sidebar" class="sidebar">
+    <button id="closeSidebar" aria-label="Close Menu"><i class="fa-solid fa-times"></i></button>
+    <nav class="sidebar-nav" role="tablist">
+      <button class="tablink" data-tab="introTab" aria-selected="false">
+        <i class="fa-solid fa-info-circle"></i><span> Introduction</span>
+      </button>
+      <button class="tablink" data-tab="instructionsTab" aria-selected="false">
+        <i class="fa-solid fa-circle-question"></i><span> Instructions</span>
+      </button>
+      <button class="tablink" data-tab="attributesTab" aria-selected="false">
+        <i class="fa-solid fa-list"></i><span> Attributes</span>
+      </button>
+      <button class="tablink" data-tab="inputsTab" aria-selected="false">
+        <i class="fa-solid fa-sliders"></i><span> Inputs</span>
+      </button>
+      <button class="tablink" data-tab="wtpTab" aria-selected="false">
+        <i class="fa-solid fa-chart-bar"></i><span> WTP Results</span>
+      </button>
+      <button class="tablink" data-tab="probTab" aria-selected="false">
+        <i class="fa-solid fa-chart-pie"></i><span> Predicted Uptake</span>
+      </button>
+      <button class="tablink" data-tab="costsTab" aria-selected="false">
+        <i class="fa-solid fa-calculator"></i><span> Costs &amp; Benefits</span>
+      </button>
+      <button class="tablink" data-tab="scenariosTab" aria-selected="false">
+        <i class="fa-solid fa-folder-open"></i><span> Saved Scenarios</span>
+      </button>
+    </nav>
+  </div>
+  <!-- Hamburger Button -->
+  <button id="openSidebar" aria-label="Open Menu"><i class="fa-solid fa-bars"></i></button>
+
+  <!-- Main Content -->
+  <div id="mainContent">
     <header>
       <h1>LonelyLessAustralia Decision Aid Tool</h1>
-      <p>This tool helps you evaluate programme configurations for reducing loneliness among older adults in Australia. </p>
+      <p>This tool helps you evaluate programme configurations for reducing loneliness. It explains how costs and benefits are calculated so that even lay users can understand the trade‐offs.</p>
     </header>
 
+    <!-- Navigation Tabs (desktop) -->
     <nav class="tabs" role="tablist">
       <button class="tablink active" data-tab="introTab" aria-selected="true">
         <i class="fa-solid fa-info-circle"></i><span> Introduction</span>
@@ -36,7 +76,7 @@
         <i class="fa-solid fa-chart-bar"></i><span> WTP Results</span>
       </button>
       <button class="tablink" data-tab="probTab" aria-selected="false">
-        <i class="fa-solid fa-chart-pie"></i><span> Predicted Programme Uptake</span>
+        <i class="fa-solid fa-chart-pie"></i><span> Predicted Uptake</span>
       </button>
       <button class="tablink" data-tab="costsTab" aria-selected="false">
         <i class="fa-solid fa-calculator"></i><span> Costs &amp; Benefits</span>
@@ -57,7 +97,7 @@
           <li><strong>Attributes</strong> – Detailed explanation of programme features (hover over info icons for extra details, including reference levels except for cost).</li>
           <li><strong>Inputs</strong> – Configure your scenario parameters using visually appealing level cards.</li>
           <li><strong>WTP Results</strong> – View charts showing willingness-to-pay estimates.</li>
-          <li><strong>Predicted Programme Uptake</strong> – See the predicted uptake percentage with dynamic recommendations.</li>
+          <li><strong>Predicted Uptake</strong> – See the predicted uptake percentage with dynamic recommendations.</li>
           <li><strong>Costs &amp; Benefits</strong> – Analyse cost components and QALY-based benefits with interactive sliders and educational summaries.</li>
           <li><strong>Saved Scenarios</strong> – Compare and export your saved configurations.</li>
         </ul>
@@ -73,9 +113,9 @@
           <li style="margin-left: 20px;">Configure your scenario in the <strong>Inputs</strong> tab using the level cards. All features (except method) are required; if no method is selected, in-person is assumed.</li>
           <li style="margin-left: 20px;">Click “Calculate &amp; View Results” to immediately see your results in a popup modal.</li>
           <li style="margin-left: 20px;">Examine the <strong>WTP Results</strong> tab for monetary values assigned to each attribute.</li>
-          <li style="margin-left: 20px;">Check the <strong>Predicted Programme Uptake</strong> tab for the uptake percentage and dynamic recommendations (which also appear in the popup).</li>
+          <li style="margin-left: 20px;">Check the <strong>Predicted Uptake</strong> tab for the uptake percentage and dynamic recommendations (which also appear in the modal popup).</li>
           <li style="margin-left: 20px;">Review the <strong>Costs &amp; Benefits</strong> tab for a detailed breakdown and chart.</li>
-          <li style="margin-left: 20px;">Save and compare scenarios in the <strong>Saved Scenarios</strong> tab or export the results to PDF.</li>
+          <li style="margin-left: 20px;">Save and compare scenarios in the <strong>Saved Scenarios</strong> tab or export reports in PDF and CSV formats.</li>
         </ol>
       </div>
     </section>
@@ -393,9 +433,10 @@
         <div class="cost-icons">
           <button class="buttons-row" onclick="toggleCostBreakdown()">Cost Breakdown</button>
           <button class="buttons-row" onclick="toggleBenefitsAnalysis()">Benefits Analysis</button>
+          <button class="buttons-row" onclick="openComparison()">Export PDF</button>
+          <button class="buttons-row" onclick="downloadCSV()">Download CSV</button>
         </div>
         <div id="detailedCostBreakdown" class="cost-cards" style="display: none;">
-          <!-- (Cost cards as before) -->
           <div class="cost-card">
             <h4><i class="fa-solid fa-newspaper"></i> Advertisements in Local Press</h4>
             <p><strong>Value:</strong> A$2978.80</p>
@@ -490,7 +531,8 @@
         <p>Below are your saved scenarios. Each row displays the input values along with the computed predicted uptake and net benefit.</p>
         <div class="buttons-row">
           <button onclick="saveScenario()">Save Current Scenario</button>
-          <button onclick="openComparison()">Compare &amp; Export to PDF</button>
+          <button onclick="openComparison()">Compare &amp; Export PDF</button>
+          <button onclick="downloadCSV()">Download CSV</button>
         </div>
         <div class="table-container">
           <table id="scenarioTable">
