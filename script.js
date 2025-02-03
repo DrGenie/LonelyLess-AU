@@ -1,26 +1,21 @@
 /****************************************************************************
  * SCRIPT.JS
- * Enhanced tabs with event listeners, responsive collapsible sidebar,
- * onboarding guided tour, dark mode toggle, downloadable reports (PDF & CSV),
- * dynamic doughnut chartt for predicted uptake with refined recommendations,
- * and results modal.
+ * Enhanced tabs with event listeners, dark mode toggle, onboarding guided tour,
+ * downloadable reports (PDF & CSV), dynamic doughnut chart for predicted uptake
+ * with refined recommendations, and immediate results modal.
  ****************************************************************************/
 
 /* On DOM load */
 document.addEventListener("DOMContentLoaded", function() {
-  // Attach tab event listeners (desktop and sidebar)
+  // Attach tab event listeners
   const tabButtons = document.querySelectorAll(".tablink");
   tabButtons.forEach(button => {
     button.addEventListener("click", function() {
       openTab(this.getAttribute("data-tab"), this);
-      if (window.innerWidth <= 768) closeSidebar();
     });
   });
   // Set default tab
   openTab("introTab", document.querySelector(".tablink"));
-  // Sidebar hamburger events
-  document.getElementById("openSidebar").addEventListener("click", openSidebar);
-  document.getElementById("closeSidebar").addEventListener("click", closeSidebar);
   // Dark mode toggle
   document.getElementById("toggleDarkMode").addEventListener("click", toggleDarkMode);
   // Onboarding: show once on first load
@@ -29,27 +24,6 @@ document.addEventListener("DOMContentLoaded", function() {
     localStorage.setItem("onboarded", "true");
   }
 });
-
-/** Sidebar Functions */
-function openSidebar() {
-  document.getElementById("sidebar").style.transform = "translateX(0)";
-}
-function closeSidebar() {
-  document.getElementById("sidebar").style.transform = "translateX(-100%)";
-}
-
-/** Dark Mode Toggle */
-function toggleDarkMode() {
-  document.body.classList.toggle("dark-mode");
-}
-
-/** Onboarding Modal */
-function openOnboarding() {
-  document.getElementById("onboardingModal").style.display = "block";
-}
-function closeOnboarding() {
-  document.getElementById("onboardingModal").style.display = "none";
-}
 
 /** Tab Switching Function */
 function openTab(tabId, btn) {
@@ -137,7 +111,7 @@ function buildScenarioFromInputs() {
   const duration = document.querySelector('input[name="duration"]:checked');
   const accessibility = document.querySelector('input[name="accessibility"]:checked');
   
-  // Method is optional; if not selected, assume in-person.
+  // Method is optional; if not selected, assume in‑person.
   const method = document.querySelector('input[name="method"]:checked');
   let virtualCheck = false, hybridCheck = false;
   if (method) {
@@ -404,9 +378,9 @@ function openComparison() {
     currentY += 5;
     doc.text(`Hybrid: ${scenario.hybridCheck ? 'Yes' : 'No'}`, 15, currentY);
     currentY += 5;
-    doc.text(`2-Hour: ${scenario.twoHCheck ? 'Yes' : 'No'}`, 15, currentY);
+    doc.text(`2‑Hour: ${scenario.twoHCheck ? 'Yes' : 'No'}`, 15, currentY);
     currentY += 5;
-    doc.text(`4-Hour: ${scenario.fourHCheck ? 'Yes' : 'No'}`, 15, currentY);
+    doc.text(`4‑Hour: ${scenario.fourHCheck ? 'Yes' : 'No'}`, 15, currentY);
     currentY += 5;
     doc.text(`Community: ${scenario.commCheck ? 'Yes' : 'No'}`, 15, currentY);
     currentY += 5;
