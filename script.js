@@ -1,21 +1,55 @@
 /****************************************************************************
  * SCRIPT.JS
- * Enhanced tabs with event listeners, improved Inputts layouts,
- * interactive cost–benefit analysis, dynamic doughnut chart for predicted uptake with refined recommendationss,
- * and export to PDF functionality.
+ * Enhanced tabs with event listeners, responsive collapsible sidebar,
+ * onboarding guided tour, dark mode toggle, downloadable reports (PDF & CSV),
+ * dynamic doughnut chart for predicted uptake with refined recommendations,
+ * and modal popup for immediate results.
  ****************************************************************************/
 
-/* Attach event listeners when DOM is loaded */
+/* On DOM load */
 document.addEventListener("DOMContentLoaded", function() {
+  // Attach tab event listeners (desktop and sidebar)
   const tabButtons = document.querySelectorAll(".tablink");
   tabButtons.forEach(button => {
     button.addEventListener("click", function() {
       openTab(this.getAttribute("data-tab"), this);
+      if (window.innerWidth <= 768) closeSidebar();
     });
   });
   // Set default tab
   openTab("introTab", document.querySelector(".tablink"));
+  // Sidebar hamburger
+  document.getElementById("openSidebar").addEventListener("click", openSidebar);
+  document.getElementById("closeSidebar").addEventListener("click", closeSidebar);
+  // Dark mode toggle
+  document.getElementById("toggleDarkMode").addEventListener("click", toggleDarkMode);
+  // Onboarding: show once on first load
+  if (!localStorage.getItem("onboarded")) {
+    openOnboarding();
+    localStorage.setItem("onboarded", "true");
+  }
 });
+
+/** Sidebar Functions */
+function openSidebar() {
+  document.getElementById("sidebar").style.transform = "translateX(0)";
+}
+function closeSidebar() {
+  document.getElementById("sidebar").style.transform = "translateX(-100%)";
+}
+
+/** Dark Mode Toggle */
+function toggleDarkMode() {
+  document.body.classList.toggle("dark-mode");
+}
+
+/** Onboarding Modal */
+function openOnboarding() {
+  document.getElementById("onboardingModal").style.display = "block";
+}
+function closeOnboarding() {
+  document.getElementById("onboardingModal").style.display = "none";
+}
 
 /** Tab Switching Function */
 function openTab(tabId, btn) {
@@ -268,7 +302,7 @@ function toggleBenefitsAnalysis() {
 }
 
 /***************************************************************************
- * Scenario Saving & PDF Export
+ * Scenario Saving & Downloadable Reports (PDF & CSV)
  ***************************************************************************/
 let savedScenarios = [];
 function saveScenario() {
@@ -293,7 +327,44 @@ function saveScenario() {
   tableBody.appendChild(row);
   alert(`Scenario "${scenario.name}" saved successfully.`);
 }
-
+function downloadCSV() {
+  if (savedScenarios.length === 0) {
+    alert("No scenarios saved to export.");
+    return;
+  }
+  let csv = "Name,State,Cost Adjust,Cost (AUD),Local,Wider,Weekly,Monthly,Virtual,Hybrid,2-Hour,4-Hour,Community,Counselling,VR,Uptake (%),Net Benefit (A$)\n";
+  savedScenarios.forEach(scenario => {
+    const row = [
+      scenario.name,
+      scenario.state || "None",
+      scenario.adjustCosts,
+      scenario.cost_val.toFixed(2),
+      scenario.localCheck ? "Yes" : "No",
+      scenario.widerCheck ? "Yes" : "No",
+      scenario.weeklyCheck ? "Yes" : "No",
+      scenario.monthlyCheck ? "Yes" : "No",
+      scenario.virtualCheck ? "Yes" : "No",
+      scenario.hybridCheck ? "Yes" : "No",
+      scenario.twoHCheck ? "Yes" : "No",
+      scenario.fourHCheck ? "Yes" : "No",
+      scenario.commCheck ? "Yes" : "No",
+      scenario.psychCheck ? "Yes" : "No",
+      scenario.vrCheck ? "Yes" : "No",
+      scenario.predictedUptake,
+      scenario.netBenefit
+    ].join(",");
+    csv += row + "\n";
+  });
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.setAttribute("href", url);
+  link.setAttribute("download", "Scenarios_Comparison.csv");
+  link.style.visibility = "hidden";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
 function openComparison() {
   if (savedScenarios.length < 2) {
     alert("Save at least two scenarios to compare.");
@@ -378,16 +449,15 @@ function openSingleScenario() {
 }
 
 /***************************************************************************
- * Render Predicted Programme Uptake Chart (Doughnut) with Dynamic Recommendations
+ * Render Predicted Programme Uptake Chart (Doughnut)
  ***************************************************************************/
-let uptakeChart = null;  // Single declaration.
+let uptakeChart = null; // Single declaration.
 function renderProbChart() {
   const scenario = buildScenarioFromInputs();
   if (!scenario) return;
   const pVal = computeProbability(scenario, mainCoefficients) * 100;
   drawUptakeChart(pVal);
   const recommendation = getRecommendation(scenario, pVal);
-  // Update modal if already open.
   document.getElementById("modalResults").innerHTML = `<h4>Calculation Results</h4>
     <p><strong>Predicted Uptake:</strong> ${pVal.toFixed(1)}%</p>
     <p>${recommendation}</p>`;
@@ -429,42 +499,37 @@ function drawUptakeChart(uptakeVal) {
 
 /***************************************************************************
  * Dynamic Recommendation for Predicted Programme Uptake
- * (Mutually exclusive support types are not integrated)
  ***************************************************************************/
 function getRecommendation(scenario, uptake) {
   let rec = "Recommendation: ";
   
-  // Method
   if (!scenario.virtualCheck && !scenario.hybridCheck) {
     rec += "Delivery defaults to in-person. ";
   } else if (scenario.virtualCheck && uptake < 50) {
-    rec += "Fully virtual delivery may lower uptake; consider switching to a hybrid or in-person approach. ";
+    rec += "Consider switching from fully virtual to a hybrid or in-person approach. ";
   } else if (scenario.hybridCheck && uptake < 50) {
-    rec += "Hybrid delivery may benefit from increasing in-person elements. ";
+    rec += "Increase in-person elements within the hybrid approach. ";
   }
   
-  // Support type (only one is selected)
   if (scenario.commCheck && uptake < 40) {
     rec += "Promote community engagement more strongly. ";
   } else if (scenario.psychCheck && uptake < 40) {
-    rec += "Counselling alone may be less appealing; consider additional engagement strategies. ";
+    rec += "Counselling alone may need additional support strategies. ";
   } else if (scenario.vrCheck && uptake < 40) {
-    rec += "VR-based sessions may be less effective; consider alternative support methods. ";
+    rec += "Reconsider VR-based sessions or combine with traditional support. ";
   }
   
-  // Frequency and Duration
   if (scenario.monthlyCheck && uptake < 50) {
-    rec += "Switch from monthly to weekly sessions to improve uptake. ";
+    rec += "Switch from monthly to weekly sessions. ";
   }
   if (scenario.twoHCheck && uptake < 50) {
-    rec += "Shorter interactions might attract more participants. ";
+    rec += "Shorter interactions might improve participation. ";
   } else if (scenario.fourHCheck && uptake >= 70) {
-    rec += "Longer interactions are effective. ";
+    rec += "Longer interactions are proving effective. ";
   }
   
-  // Accessibility
   if (scenario.widerCheck && uptake < 50) {
-    rec += "Offering the programme locally could boost uptake. ";
+    rec += "Offering the programme locally may boost uptake. ";
   }
   
   if (uptake >= 70) {
@@ -497,7 +562,6 @@ const FIXED_TOTAL = FIXED_COSTS.advertisement + 26863.00;
 const VARIABLE_TOTAL = VARIABLE_COSTS.printing + VARIABLE_COSTS.postage + VARIABLE_COSTS.admin + VARIABLE_COSTS.trainer +
                          VARIABLE_COSTS.oncosts + VARIABLE_COSTS.facilitator + VARIABLE_COSTS.materials +
                          VARIABLE_COSTS.venue + VARIABLE_COSTS.sessionTime + VARIABLE_COSTS.travel;
-
 function renderCostsBenefits() {
   const scenario = buildScenarioFromInputs();
   if (!scenario) return;
