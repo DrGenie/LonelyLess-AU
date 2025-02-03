@@ -13,7 +13,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
-  <!-- Dark mode toggle -->
+  <!-- Dark Mode Toggle (visible in header) -->
   <div id="themeToggle">
     <button id="toggleDarkMode" aria-label="Toggle dark mode"><i class="fa-solid fa-moon"></i></button>
   </div>
@@ -48,14 +48,14 @@
       </button>
     </nav>
   </div>
-  <!-- Hamburger Button -->
+  <!-- Hamburger Button (visible on mobile) -->
   <button id="openSidebar" aria-label="Open Menu"><i class="fa-solid fa-bars"></i></button>
 
-  <!-- Main Content -->
-  <div id="mainContent">
+  <!-- Main Content Container with limited width -->
+  <div id="mainContent" class="main-content">
     <header>
       <h1>LonelyLessAustralia Decision Aid Tool</h1>
-      <p>This tool helps you evaluate programme configurations for reducing loneliness among older adults (65 years and above). </p>
+      <p>This tool helps you evaluate programme configurations for reducing loneliness. It explains how costs and benefits are calculated so that even lay users can understand the trade‐offs.</p>
     </header>
 
     <!-- Navigation Tabs (desktop) -->
@@ -94,10 +94,10 @@
         </p>
         <ul>
           <li><strong>Instructions</strong> – Step-by-step guidance.</li>
-          <li><strong>Attributes</strong> – Detailed explanation of programme features (hover over info icons for extra details).</li>
-          <li><strong>Inputs</strong> – Configure your scenario parameters using level cards.</li>
+          <li><strong>Attributes</strong> – Detailed explanation of programme features (hover over info icons for extra details, including reference levels except for cost).</li>
+          <li><strong>Inputs</strong> – Configure your scenario parameters using visually appealing level cards.</li>
           <li><strong>WTP Results</strong> – View charts showing willingness-to-pay estimates.</li>
-          <li><strong>Predicted Uptake</strong> – See the predicted uptake percentage with recommendations.</li>
+          <li><strong>Predicted Uptake</strong> – See the predicted uptake percentage with dynamic recommendations.</li>
           <li><strong>Costs &amp; Benefits</strong> – Analyse cost components and QALY-based benefits with interactive sliders and educational summaries.</li>
           <li><strong>Saved Scenarios</strong> – Compare and export your saved configurations.</li>
         </ul>
@@ -109,11 +109,11 @@
       <div class="calculation-info">
         <h4>How to Use This Tool</h4>
         <ol>
-          <li style="margin-left: 20px;">Review the <strong>Attributes</strong> tab to understand each programme feature. Hover over the info icons for details and reference levels (except for cost per session).</li>
+          <li style="margin-left: 20px;">Review the <strong>Attributes</strong> tab to understand each programme feature. Hover over info icons for details and reference levels (except for cost per session).</li>
           <li style="margin-left: 20px;">Configure your scenario in the <strong>Inputs</strong> tab using the level cards. All features (except method) are required; if no method is selected, in-person is assumed.</li>
           <li style="margin-left: 20px;">Click “Calculate &amp; View Results” to immediately see your results in a popup modal.</li>
           <li style="margin-left: 20px;">Examine the <strong>WTP Results</strong> tab for monetary values assigned to each attribute.</li>
-          <li style="margin-left: 20px;">Check the <strong>Predicted Uptake</strong> tab for the uptake percentage and dynamic recommendations (which also appear in the modal popup).</li>
+          <li style="margin-left: 20px;">Check the <strong>Predicted Uptake</strong> tab for the uptake percentage and dynamic recommendations (also shown in the popup).</li>
           <li style="margin-left: 20px;">Review the <strong>Costs &amp; Benefits</strong> tab for a detailed breakdown and chart.</li>
           <li style="margin-left: 20px;">Save and compare scenarios in the <strong>Saved Scenarios</strong> tab or export reports in PDF and CSV formats.</li>
         </ol>
@@ -223,7 +223,7 @@
       </div>
     </section>
 
-    <!-- Inputs Tab (Level Card Layout) -->
+    <!-- Inputs Tab -->
     <section id="inputsTab" class="tabcontent" tabindex="0">
       <div class="input-card">
         <h2>Programme Inputs</h2>
@@ -248,7 +248,7 @@
                 </label>
               </div>
             </div>
-            <!-- Method Card (Optional; defaults to in-person if unselected) -->
+            <!-- Method Card -->
             <div class="input-level-card">
               <h3>Method <span class="reference">(Reference: In-person)</span></h3>
               <div class="options">
@@ -420,9 +420,7 @@
             <option value="high">High (0.1 QALYs)</option>
           </select>
         </div>
-        <div id="costsBenefitsResults">
-          <!-- Summary and chart will render here -->
-        </div>
+        <div id="costsBenefitsResults"></div>
         <div class="modelling-assumptions">
           <h3><i class="fa-solid fa-lightbulb"></i> Modelling Assumptions</h3>
           <p>
@@ -566,6 +564,24 @@
     <footer>
       <p>&copy; 2025 LonelyLessAustralia. All Rights Reserved.<br />Mesfin Genie, Newcastle Business School, The University of Newcastle, Australia</p>
     </footer>
+  </div>
+
+  <!-- Onboarding Modal -->
+  <div id="onboardingModal" class="modal">
+    <div class="modal-content">
+      <span class="close-button" onclick="closeOnboarding()">&times;</span>
+      <h4>Welcome to LonelyLessAustralia!</h4>
+      <p>Use the navigation menu (hamburger icon on mobile) to explore the tool. Hover over info icons for additional guidance. You can switch between light and dark modes using the toggle button at the top.</p>
+      <p>Click the close button to start your guided tour.</p>
+    </div>
+  </div>
+
+  <!-- Result Modal for Calculation Results -->
+  <div id="resultModal" class="modal">
+    <div class="modal-content">
+      <span class="close-button" onclick="closeModal()">&times;</span>
+      <div id="modalResults"></div>
+    </div>
   </div>
 
   <script src="script.js"></script>
