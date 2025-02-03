@@ -13,54 +13,53 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
-  <!-- Header with Dark Mode Toggle -->
-  <header class="site-header">
-    <h1>LonelyLessAustralia Decision Aid Tool</h1>
-    <p>
-      This tool helps you evaluate programme configurations for reducing loneliness among older adults (65 years and above) in Australia.
-    </p>
-    <button id="toggleDarkMode" aria-label="Toggle dark mode">
-      <i class="fa-solid fa-moon"></i>
-    </button>
-  </header>
+  <!-- Standard container -->
+  <div class="container">
+    <!-- Header with dark mode toggle -->
+    <header>
+      <h1>LonelyLessAustralia Decision Aid Tool</h1>
+      <p>
+        This tool helps you evaluate programme configurations for reducing loneliness.
+        It explains how costs and benefits are calculated so that even lay users, decision makers, and policy makers can understand the trade‑offs.
+      </p>
+      <button id="toggleDarkMode" aria-label="Toggle dark mode"><i class="fa-solid fa-moon"></i></button>
+    </header>
 
-  <!-- Hamburger Button for Mobile (always visible) -->
-  <button id="openSidebar" aria-label="Open Menu"><i class="fa-solid fa-bars"></i></button>
+    <!-- Mobile Hamburger Button -->
+    <button id="openSidebar" aria-label="Open Menu"><i class="fa-solid fa-bars"></i></button>
 
-  <!-- Collapsible Sidebar for Mobile Navigation -->
-  <aside id="sidebar" class="sidebar">
-    <button id="closeSidebar" aria-label="Close Menu"><i class="fa-solid fa-times"></i></button>
-    <nav class="sidebar-nav" role="tablist">
-      <button class="tablink" data-tab="introTab" aria-selected="false">
-        <i class="fa-solid fa-info-circle"></i><span> Introduction</span>
-      </button>
-      <button class="tablink" data-tab="instructionsTab" aria-selected="false">
-        <i class="fa-solid fa-circle-question"></i><span> Instructions</span>
-      </button>
-      <button class="tablink" data-tab="attributesTab" aria-selected="false">
-        <i class="fa-solid fa-list"></i><span> Attributes</span>
-      </button>
-      <button class="tablink" data-tab="inputsTab" aria-selected="false">
-        <i class="fa-solid fa-sliders"></i><span> Inputs</span>
-      </button>
-      <button class="tablink" data-tab="wtpTab" aria-selected="false">
-        <i class="fa-solid fa-chart-bar"></i><span> WTP Results</span>
-      </button>
-      <button class="tablink" data-tab="probTab" aria-selected="false">
-        <i class="fa-solid fa-chart-pie"></i><span> Predicted Uptake</span>
-      </button>
-      <button class="tablink" data-tab="costsTab" aria-selected="false">
-        <i class="fa-solid fa-calculator"></i><span> Costs &amp; Benefits</span>
-      </button>
-      <button class="tablink" data-tab="scenariosTab" aria-selected="false">
-        <i class="fa-solid fa-folder-open"></i><span> Saved Scenarios</span>
-      </button>
-    </nav>
-  </aside>
+    <!-- Collapsible Sidebar for Mobile Navigation -->
+    <aside id="sidebar" class="sidebar">
+      <button id="closeSidebar" aria-label="Close Menu"><i class="fa-solid fa-times"></i></button>
+      <nav class="sidebar-nav" role="tablist">
+        <button class="tablink" data-tab="introTab" aria-selected="false">
+          <i class="fa-solid fa-info-circle"></i><span> Introduction</span>
+        </button>
+        <button class="tablink" data-tab="instructionsTab" aria-selected="false">
+          <i class="fa-solid fa-circle-question"></i><span> Instructions</span>
+        </button>
+        <button class="tablink" data-tab="attributesTab" aria-selected="false">
+          <i class="fa-solid fa-list"></i><span> Attributes</span>
+        </button>
+        <button class="tablink" data-tab="inputsTab" aria-selected="false">
+          <i class="fa-solid fa-sliders"></i><span> Inputs</span>
+        </button>
+        <button class="tablink" data-tab="wtpTab" aria-selected="false">
+          <i class="fa-solid fa-chart-bar"></i><span> WTP Results</span>
+        </button>
+        <button class="tablink" data-tab="probTab" aria-selected="false">
+          <i class="fa-solid fa-chart-pie"></i><span> Predicted Uptake</span>
+        </button>
+        <button class="tablink" data-tab="costsTab" aria-selected="false">
+          <i class="fa-solid fa-calculator"></i><span> Costs &amp; Benefits</span>
+        </button>
+        <button class="tablink" data-tab="scenariosTab" aria-selected="false">
+          <i class="fa-solid fa-folder-open"></i><span> Saved Scenarios</span>
+        </button>
+      </nav>
+    </aside>
 
-  <!-- Main Content -->
-  <main id="mainContent">
-    <!-- Navigation Tabs for Desktop -->
+    <!-- Navigation Tabs (Desktop) -->
     <nav class="tabs" role="tablist">
       <button class="tablink active" data-tab="introTab" aria-selected="true">
         <i class="fa-solid fa-info-circle"></i><span> Introduction</span>
@@ -88,6 +87,8 @@
       </button>
     </nav>
 
+    <!-- Content Sections -->
+
     <!-- Introduction Tab -->
     <section id="introTab" class="tabcontent" tabindex="0" style="display: block;">
       <div class="intro-box">
@@ -97,11 +98,11 @@
         </p>
         <ul>
           <li><strong>Instructions</strong> – Step-by-step guidance on how to use the tool.</li>
-          <li><strong>Attributes</strong> – Detailed explanation of each programme feature (hover over icons for extra details and reference levels).</li>
+          <li><strong>Attributes</strong> – Detailed explanation of each programme feature (hover over info icons for extra details and reference levels, except for cost).</li>
           <li><strong>Inputs</strong> – Configure your scenario using clear level cards.</li>
           <li><strong>WTP Results</strong> – View charts showing willingness-to-pay estimates.</li>
           <li><strong>Predicted Uptake</strong> – See the predicted uptake percentage with tailored recommendations.</li>
-          <li><strong>Costs &amp; Benefits</strong> – Analyse detailed cost breakdown and QALY-based benefits.</li>
+          <li><strong>Costs &amp; Benefits</strong> – Analyze detailed cost breakdown and QALY-based benefits.</li>
           <li><strong>Saved Scenarios</strong> – Compare, export, and download your saved configurations.</li>
         </ul>
       </div>
@@ -112,11 +113,11 @@
       <div class="calculation-info">
         <h4>How to Use This Tool</h4>
         <ol>
-          <li style="margin-left: 20px;">Review the <strong>Attributes</strong> tab to understand each programme feature. Hover over info icons for details and reference levels.</li>
+          <li style="margin-left: 20px;">Review the <strong>Attributes</strong> tab to understand each programme feature. Hover over info icons for details and reference levels (except cost per session).</li>
           <li style="margin-left: 20px;">Configure your scenario in the <strong>Inputs</strong> tab using the level cards. All features (except method) are required; if no method is selected, in‑person is assumed.</li>
-          <li style="margin-left: 20px;">Click “Calculate &amp; View Results” to see your results.</li>
+          <li style="margin-left: 20px;">Click “Calculate &amp; View Results” to immediately see your results in a popup modal.</li>
           <li style="margin-left: 20px;">Examine the <strong>WTP Results</strong> tab for monetary values assigned to each attribute.</li>
-          <li style="margin-left: 20px;">Check the <strong>Predicted Uptake</strong> tab for the uptake percentage and tailored recommendations.</li>
+          <li style="margin-left: 20px;">Check the <strong>Predicted Uptake</strong> tab for the uptake percentage and tailored recommendations (also shown in the modal popup).</li>
           <li style="margin-left: 20px;">Review the <strong>Costs &amp; Benefits</strong> tab for a detailed breakdown and chart.</li>
           <li style="margin-left: 20px;">Save and compare scenarios in the <strong>Saved Scenarios</strong> tab or export reports in PDF and CSV formats.</li>
         </ol>
@@ -127,7 +128,7 @@
     <section id="attributesTab" class="tabcontent" tabindex="0">
       <h2>Key Attributes</h2>
       <div class="attributes-list">
-        <!-- Attribute Card 1: Cost per Session (no reference) -->
+        <!-- Attribute Card 1: Cost per Session -->
         <div class="attribute-card" tabindex="0">
           <div class="attribute-icon">
             <svg width="24" height="24" fill="#2980b9" xmlns="http://www.w3.org/2000/svg">
@@ -320,7 +321,7 @@
             </div>
             <!-- Cost-of-Living Adjustment Card -->
             <div class="input-level-card">
-              <h3>Cost-of-Living Adjustment</h3>
+              <h3>Cost‑of‑Living Adjustment</h3>
               <div class="options">
                 <label for="state_select">
                   <i class="fa-solid fa-map-marker-alt"></i> State:
@@ -382,7 +383,7 @@
         </p>
         <p>
           For example, among the programme types, community engagement is the most highly valued, with a WTP of A$14.47 (SE=3.31, p &lt; 0.001).
-          This shows older adults are willing to pay an additional A$14.47 for community-based programmes compared to the reference peer support scenario.
+          This shows older adults are willing to pay an additional A$14.47 for community‑based programmes compared to the reference peer support scenario.
         </p>
         <div class="buttons-row">
           <button onclick="renderWTPChart()">Show WTP Charts</button>
@@ -432,7 +433,7 @@
           <h3><i class="fa-solid fa-lightbulb"></i> Modelling Assumptions</h3>
           <p>
             Our analysis uses interactive cost sliders, informative tooltips, and clear educational summaries to explain how costs and benefits are calculated.
-            <br/><strong>Reference:</strong> Engel, L., Lee, Y. Y., Le, L. K. D., Lal, A., &amp; Mihalopoulos, C. (2021). Reducing loneliness to prevent depression in older adults in Australia: A modelled cost-effectiveness analysis. <em>Mental Health and Prevention, 24</em>.
+            <br/><strong>Reference:</strong> Engel, L., Lee, Y. Y., Le, L. K. D., Lal, A., &amp; Mihalopoulos, C. (2021). Reducing loneliness to prevent depression in older adults in Australia: A modelled cost‑effectiveness analysis. <em>Mental Health and Prevention, 24</em>.
             <a href="https://doi.org/10.1016/j.mhp.2021.200212" target="_blank">https://doi.org/10.1016/j.mhp.2021.200212</a>
           </p>
         </div>
@@ -572,7 +573,7 @@
     <footer>
       <p>&copy; 2025 LonelyLessAustralia. All Rights Reserved.<br />Mesfin Genie, Newcastle Business School, The University of Newcastle, Australia</p>
     </footer>
-  </main>
+  </div>
 
   <!-- Onboarding Modal -->
   <div id="onboardingModal" class="modal">
@@ -580,10 +581,11 @@
       <span class="close-button" onclick="closeOnboarding()">&times;</span>
       <h4>Welcome to LonelyLessAustralia!</h4>
       <p>
-        Explore the tool by using the navigation tabs or the menu (hamburger icon) on mobile. Each section is designed to guide you through programme attributes, input configuration, cost‑benefit analysis, and scenario comparisons.
-      </p>
-      <p>
-        Hover over the info icons to learn more about each feature. Use the dark mode toggle at the top right to switch themes.
+        Use the navigation tabs above (or the menu on mobile) to explore each section of this tool.
+        <br/><strong>Attributes:</strong> Learn about each programme feature by hovering over the info icons.
+        <br/><strong>Inputs:</strong> Configure your scenario using the clear level cards.
+        <br/><strong>WTP & Uptake:</strong> View detailed cost‑benefit and uptake analyses with dynamic recommendations.
+        <br/><strong>Reports:</strong> Save your scenarios and download them as PDF or CSV.
       </p>
       <p>Click the close button to begin your guided tour.</p>
     </div>
