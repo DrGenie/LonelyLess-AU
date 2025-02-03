@@ -1,9 +1,9 @@
 /****************************************************************************
  * SCRIPT.JS
- * Enhanced tabs with event listeners, responsive collapsible sidebar,
+ * Enhanced tabs with event listeners, responsive sidebar,
  * onboarding guided tour, dark mode toggle, downloadable reports (PDF & CSV),
  * dynamic doughnut chart for predicted uptake with refined recommendations,
- * and modal popup for immediate results.
+ * and immediate results modal.
  ****************************************************************************/
 
 /* On DOM load */
@@ -451,7 +451,7 @@ function openSingleScenario() {
 /***************************************************************************
  * Render Predicted Programme Uptake Chart (Doughnut)
  ***************************************************************************/
-let uptakeChart = null; // Single declaration.
+let uptakeChart = null;
 function renderProbChart() {
   const scenario = buildScenarioFromInputs();
   if (!scenario) return;
@@ -504,11 +504,11 @@ function getRecommendation(scenario, uptake) {
   let rec = "Recommendation: ";
   
   if (!scenario.virtualCheck && !scenario.hybridCheck) {
-    rec += "Delivery defaults to in-person. ";
+    rec += "Delivery defaults to in‑person. ";
   } else if (scenario.virtualCheck && uptake < 50) {
-    rec += "Consider switching from fully virtual to a hybrid or in-person approach. ";
+    rec += "Consider switching from fully virtual to a hybrid or in‑person approach. ";
   } else if (scenario.hybridCheck && uptake < 50) {
-    rec += "Increase in-person elements within the hybrid approach. ";
+    rec += "Increase in‑person elements within the hybrid approach. ";
   }
   
   if (scenario.commCheck && uptake < 40) {
@@ -516,7 +516,7 @@ function getRecommendation(scenario, uptake) {
   } else if (scenario.psychCheck && uptake < 40) {
     rec += "Counselling alone may need additional support strategies. ";
   } else if (scenario.vrCheck && uptake < 40) {
-    rec += "Reconsider VR-based sessions or combine with traditional support. ";
+    rec += "Reconsider VR‑based sessions or combine with traditional support. ";
   }
   
   if (scenario.monthlyCheck && uptake < 50) {
